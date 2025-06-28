@@ -68,6 +68,11 @@ io.on('connection', (socket) => {
 
   // Handle collectible collection
   socket.on('collect', () => {
+    // Increment the player's score
+    if (players[socket.id]) {
+      players[socket.id].score = (players[socket.id].score || 0) + (collectible.value || 1);
+    }
+
     // Move collectible to a new random position
     collectible = {
       x: Math.floor(Math.random() * 600),
@@ -77,6 +82,9 @@ io.on('connection', (socket) => {
       width: 20,
       height: 20
     };
+
+    // Broadcast updated players and collectible to all clients
+    io.emit('players', players);
     io.emit('collectible', collectible);
   });
 
