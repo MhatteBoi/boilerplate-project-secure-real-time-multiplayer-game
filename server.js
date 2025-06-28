@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 });
 
 // --- YOUR GAME LOGIC HERE ---
-// Example: Keep track of players and collectibles
+// Keep track of players and collectibles
 const players = {};
 let collectible = { x: 300, y: 200, value: 1, id: 'c1', width: 20, height: 20 };
 
