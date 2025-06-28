@@ -3,12 +3,23 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const expect = require('chai');
 const socket = require('socket.io');
+const helmet = require('helmet');
 const cors = require('cors');
 
 const fccTestingRoutes = require('./routes/fcctesting.js');
 const runner = require('./test-runner.js');
 
 const app = express();
+
+app.use(helmet.noSniff()); // Prevent MIME type sniffing
+app.use(helmet.xssFilter()); // Prevent XSS
+app.use(helmet.noCache()); // Prevent caching
+
+// Set fake powered-by header
+app.use((req, res, next) => {
+  res.setHeader('X-Powered-By', 'PHP 7.4.3');
+  next();
+});
 
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/assets', express.static(process.cwd() + '/assets'));
@@ -34,6 +45,7 @@ app.use(function(req, res, next) {
     .type('text')
     .send('Not Found');
 });
+
 
 const portNum = process.env.PORT || 3000;
 
